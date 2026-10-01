@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>단어장 | 서비스 소개</title>
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +16,7 @@
     사용자: 영어 단어를 효율적으로 암기하고 싶은 사람
     목적: 서비스의 주요 내용을 이해한다.
     핵심 행동: 필요한 영역으로 이동하고 이메일로 소식을 신청한다.
-    정보 순서: 서비스 소개 → 주요 기능 → 이용 방법 → 소식 받기 -->
+    정보 순서: 서비스 소개 → 주요 기능 → 이용 방법 → 알림 설정 → 소식 받기 -->
   <header class="site-header">
     <p class="eyebrow">ENGLISH VOCABULARY SERVICE</p>
     <h1>단어장</h1>
@@ -25,6 +26,7 @@
       <a href="#about">서비스 소개</a>
       <a href="#features">주요 기능</a>
       <a href="#steps">이용 방법</a>
+      <a href="#notify">알림 설정</a>
       <a href="#subscribe">소식 받기</a>
     </nav>
   </header>
@@ -70,6 +72,12 @@
       </ol>
     </section>
 
+    <section id="notify" class="content-section settings-panel">
+      <h2>알림 설정</h2>
+      <p id="saveMessage">매일 5개 단어 학습 알림을 저장해 주세요.</p>
+      <button id="saveButton" class="primary-button" type="button">알림 저장</button>
+    </section>
+
     <section id="subscribe" class="content-section subscribe-section">
       <h2>소식 받기</h2>
       <p>매일 추천 단어와 학습 팁을 이메일로 받아보세요.</p>
@@ -86,5 +94,7 @@
   <footer class="site-footer">
     <p>© 2026 단어장</p>
   </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>

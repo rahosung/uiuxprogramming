@@ -147,6 +147,27 @@ h3 {
   margin-top: 10px;
 }
 
+.settings-panel #saveMessage {
+  margin-bottom: 20px;
+  color: #555763;
+}
+
+/* JavaScript가 is-saved를 추가하면 완료 상태가 보입니다. */
+#saveMessage.is-saved {
+  color: #245c3a;
+  background-color: #e7f7ed;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* 저장 뒤 버튼을 비활성화합니다. */
+#saveButton:disabled {
+  color: #ffffff;
+  background-color: #a8a8b2;
+  cursor: not-allowed;
+}
+
 .subscribe-section {
   background-color: #f0efff;
 }
