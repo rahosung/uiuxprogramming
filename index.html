@@ -16,60 +16,114 @@
     사용자: 영어 단어를 효율적으로 암기하고 싶은 사람
     목적: 서비스의 주요 내용을 이해한다.
     핵심 행동: 필요한 영역으로 이동하고 이메일로 소식을 신청한다.
-    정보 순서: 서비스 소개 → 주요 기능 → 이용 방법 → 알림 설정 → 소식 받기 -->
+    정보 순서: 서비스 정보(소개·이용 방법·FAQ) → 학습 설정 → 알림 설정 → 소식 받기 -->
   <header class="site-header">
     <p class="eyebrow">ENGLISH VOCABULARY SERVICE</p>
     <h1>단어장</h1>
     <p class="header-description">매일 조금씩, 오래 남는 영어 단어 학습.</p>
 
     <nav class="site-nav" aria-label="주요 메뉴">
-      <a href="#about">서비스 소개</a>
-      <a href="#features">주요 기능</a>
-      <a href="#steps">이용 방법</a>
+      <a href="#features">서비스 정보</a>
+      <a href="#interaction-practice">학습 설정</a>
       <a href="#notify">알림 설정</a>
       <a href="#subscribe">소식 받기</a>
     </nav>
   </header>
 
   <main>
-    <section id="about" class="content-section">
-      <h2>서비스 소개</h2>
-      <div class="about-layout">
-        <div class="about-text">
-          <h3>나만의 영어 단어장</h3>
-          <p>나에게 필요한 단어만 골라 담고, 반복 학습으로 오래 기억합니다.</p>
-          <p>이용 방법을 확인하고 나만의 단어장을 만들어 보세요.</p>
+    <section id="features" class="content-section">
+      <h2>서비스 정보</h2>
+
+      <div class="tabs" role="tablist" aria-label="서비스 정보 선택">
+        <button id="tab-intro" class="tab is-active" type="button"
+          role="tab" aria-selected="true"
+          aria-controls="panel-intro" data-target="#panel-intro">
+          서비스 소개
+        </button>
+
+        <button id="tab-guide" class="tab" type="button"
+          role="tab" aria-selected="false"
+          aria-controls="panel-guide" data-target="#panel-guide">
+          이용 방법
+        </button>
+
+        <button id="tab-question" class="tab" type="button"
+          role="tab" aria-selected="false"
+          aria-controls="panel-question" data-target="#panel-question">
+          자주 묻는 질문
+        </button>
+      </div>
+
+      <div id="panel-intro" class="panel is-active" role="tabpanel"
+        aria-labelledby="tab-intro">
+        <h3>나만의 영어 단어장</h3>
+        <div class="about-layout">
+          <div class="about-text">
+            <p>나에게 필요한 단어만 골라 담고, 반복 학습으로 오래 기억합니다.</p>
+            <ul class="feature-highlights">
+              <li><strong>빠른 암기</strong> — 간격 반복 학습으로 짧은 시간에 효율적으로 외웁니다.</li>
+              <li><strong>맞춤형 단어장</strong> — 관심 분야와 수준에 맞는 단어만 골라 학습합니다.</li>
+              <li><strong>학습 기록 관리</strong> — 외운 단어와 복습 일정을 한눈에 확인합니다.</li>
+            </ul>
+          </div>
+          <img class="service-image" src="assets/images/service.jpg"
+               alt="스마트폰으로 영어 단어를 학습하는 사용자">
         </div>
-        <img class="service-image" src="assets/images/service.jpg"
-             alt="스마트폰으로 영어 단어를 학습하는 사용자">
+      </div>
+
+      <div id="panel-guide" class="panel" role="tabpanel"
+        aria-labelledby="tab-guide" hidden>
+        <h3>이용 방법</h3>
+        <ol class="steps-list">
+          <li>학습할 단어를 검색하거나 목록에서 추가합니다.</li>
+          <li>예문과 발음을 들으며 단어를 학습합니다.</li>
+          <li>퀴즈로 복습하고 암기 상태를 확인합니다.</li>
+        </ol>
+      </div>
+
+      <div id="panel-question" class="panel" role="tabpanel"
+        aria-labelledby="tab-question" hidden>
+        <h3>자주 묻는 질문</h3>
+        <p><strong>Q. 무료로 이용할 수 있나요?</strong><br>A. 네, 기본 단어장 기능은 무료로 제공됩니다.</p>
+        <p><strong>Q. 하루에 몇 개의 단어를 학습하나요?</strong><br>A. 기본 목표는 하루 5개이며, 알림 설정에서 자유롭게 바꿀 수 있습니다.</p>
       </div>
     </section>
 
-    <section id="features" class="content-section">
-      <h2>주요 기능</h2>
-      <ul class="feature-list">
-        <li class="feature-card">
-          <h3>빠른 암기</h3>
-          <p>간격 반복 학습으로 짧은 시간에 효율적으로 외웁니다.</p>
-        </li>
-        <li class="feature-card">
-          <h3>맞춤형 단어장</h3>
-          <p>관심 분야와 수준에 맞는 단어만 골라 학습합니다.</p>
-        </li>
-        <li class="feature-card">
-          <h3>학습 기록 관리</h3>
-          <p>외운 단어와 복습 일정을 한눈에 확인합니다.</p>
-        </li>
-      </ul>
-    </section>
+    <section id="interaction-practice" class="content-section settings-panel">
+      <h2>학습 환경 설정</h2>
 
-    <section id="steps" class="content-section">
-      <h2>이용 방법</h2>
-      <ol class="steps-list">
-        <li>학습할 단어를 검색하거나 목록에서 추가합니다.</li>
-        <li>예문과 발음을 들으며 단어를 학습합니다.</li>
-        <li>퀴즈로 복습하고 암기 상태를 확인합니다.</li>
-      </ol>
+      <div class="interaction-item">
+        <h3>화면 테마</h3>
+        <button id="themeButton" class="primary-button" type="button">
+          어두운 테마로 바꾸기
+        </button>
+      </div>
+
+      <div class="interaction-item">
+        <label for="userName">닉네임</label>
+        <input
+          id="userName"
+          type="text"
+          maxlength="10"
+          placeholder="10자 이내로 입력"
+        >
+        <p id="userNameCount" aria-live="polite">0 / 10</p>
+      </div>
+
+      <div class="interaction-item">
+        <label class="agree-row" for="agreeCheck">
+          <input id="agreeCheck" type="checkbox">
+          학습 알림 및 이용 안내를 확인했습니다.
+        </label>
+
+        <p id="agreeMessage" aria-live="polite">
+          안내를 확인하면 학습을 시작할 수 있습니다.
+        </p>
+
+        <button id="startButton" class="primary-button" type="button" disabled>
+          단어 학습 시작하기
+        </button>
+      </div>
     </section>
 
     <section id="notify" class="content-section settings-panel">
