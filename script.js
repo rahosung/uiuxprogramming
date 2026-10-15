@@ -110,3 +110,92 @@ function handleTabClick(event) {
 tabs.forEach(function (tab) {
   tab.addEventListener("click", handleTabClick);
 });
+
+// ----- 7주차: 단어 학습 시작 흐름 -----
+
+const studyFlow = document.querySelector("#studyFlow");
+const studySteps = document.querySelectorAll(".study-step");
+const studyProgress = document.querySelector("#studyProgress");
+const studyName = document.querySelector("#studyName");
+const studyDate = document.querySelector("#studyDate");
+const studyCount = document.querySelector("#studyCount");
+const studyError = document.querySelector("#studyError");
+const reviewHelp = document.querySelector("#reviewHelp");
+const studySummary = document.querySelector("#studySummary");
+const stepNames = ["단어장 정보", "하루 학습량", "내용 확인"];
+
+function showStudyStep(step) {
+  studySteps.forEach(function (item) {
+    item.hidden = Number(item.dataset.step) !== step;
+  });
+
+  studyProgress.textContent = step <= 3
+    ? `${step} / 3 · ${stepNames[step - 1]}`
+    : "학습 시작 완료";
+}
+
+function clearStudyError() {
+  studyError.textContent = "";
+  studyName.classList.remove("has-error");
+  studyDate.classList.remove("has-error");
+}
+
+// 기존 동의 조건은 그대로 두고, 시작 버튼에서 새 흐름으로 들어갑니다.
+startButton.addEventListener("click", function () {
+  studyFlow.hidden = false;
+  showStudyStep(1);
+  studyName.focus();
+});
+
+// 필수값이 비어 있으면 같은 단계에 머물며 고칠 방법을 알려 줍니다.
+document.querySelector("#studyNext1").addEventListener("click", function () {
+  const missingName = !studyName.value.trim();
+  const missingDate = !studyDate.value;
+
+  if (missingName || missingDate) {
+    studyError.textContent = missingName
+      ? "단어장 이름을 입력해 주세요."
+      : "학습 시작일을 선택해 주세요.";
+
+    studyName.classList.toggle("has-error", missingName);
+    studyDate.classList.toggle("has-error", missingDate);
+    (missingName ? studyName : studyDate).focus();
+    return;
+  }
+
+  clearStudyError();
+  showStudyStep(2);
+});
+
+studyCount.addEventListener("change", function () {
+  reviewHelp.hidden = Number(studyCount.value) < 10;
+});
+
+document.querySelector("#studyBack2").addEventListener("click", function () {
+  showStudyStep(1);
+});
+
+document.querySelector("#studyNext2").addEventListener("click", function () {
+  studySummary.textContent =
+    `${studyName.value.trim()} · ${studyDate.value} 시작 · 하루 ${studyCount.value}개`;
+  showStudyStep(3);
+});
+
+document.querySelector("#studyBack3").addEventListener("click", function () {
+  showStudyStep(2);
+});
+
+document.querySelector("#studyComplete").addEventListener("click", function () {
+  showStudyStep(4);
+});
+
+document.querySelector("#studyRestart").addEventListener("click", function () {
+  studyName.value = "";
+  studyDate.value = "";
+  studyCount.value = "5";
+  reviewHelp.hidden = true;
+  studySummary.textContent = "";
+  clearStudyError();
+  showStudyStep(1);
+  studyName.focus();
+});
