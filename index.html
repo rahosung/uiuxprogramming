@@ -17,7 +17,8 @@
     목적: 나만의 단어장을 만들어 오늘의 학습을 시작한다.
     핵심 행동: 이용 안내에 동의한 뒤 단어장 이름·시작일·하루 학습량을 정해 학습 시작을 완료한다.
     완료 조건: 확인 화면에서 입력 내용을 검토하고 학습 시작 완료 화면에 도달한다.
-    정보 순서: 서비스 정보 → 학습 설정 → 단어 학습 시작(3단계) → 알림 설정 → 소식 받기 -->
+    중간고사 추가 기능: 학습을 시작할 때마다 '내 단어장 목록'에 추가되어 다시 열어 보거나 취소(삭제)할 수 있다.
+    정보 순서: 서비스 정보 → 학습 설정 → 단어 학습 시작(3단계) → 내 단어장 목록 → 알림 설정 → 소식 받기 -->
   <header class="site-header">
     <p class="eyebrow">ENGLISH VOCABULARY SERVICE</p>
     <h1>단어장</h1>
@@ -26,6 +27,7 @@
     <nav class="site-nav" aria-label="주요 메뉴">
       <a href="#features">서비스 정보</a>
       <a href="#interaction-practice">학습 설정</a>
+      <a href="#myLists">내 단어장</a>
       <a href="#notify">알림 설정</a>
       <a href="#subscribe">소식 받기</a>
     </nav>
@@ -178,6 +180,20 @@
 
         <button id="studyRestart" class="secondary-button" type="button">다시 만들기</button>
       </section>
+    </section>
+
+    <section id="myLists" class="content-section">
+      <h2>내 단어장 목록</h2>
+
+      <p id="myListsEmpty">아직 만든 단어장이 없습니다. 학습을 시작하면 여기에 추가됩니다.</p>
+
+      <ul id="myListsContainer" class="my-list" hidden></ul>
+
+      <div id="myListDetail" class="panel" hidden>
+        <h3>단어장 상세</h3>
+        <p id="myListDetailText"></p>
+        <button id="myListDetailClose" class="secondary-button" type="button">닫기</button>
+      </div>
     </section>
 
     <section id="notify" class="content-section settings-panel">

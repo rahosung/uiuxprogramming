@@ -337,6 +337,24 @@ body.dark #reviewHelp {
   background-color: #46402c;
 }
 
+body.dark #myListsEmpty {
+  color: #c7c8d6;
+}
+
+body.dark .my-list-item {
+  border-color: #50515f;
+  background-color: #2d2e38;
+}
+
+body.dark .my-list-info span {
+  color: #c7c8d6;
+}
+
+body.dark #myListDetailText {
+  color: #f4f4f8;
+  background-color: #3a3b47;
+}
+
 /* ----- 7주차: 단어 학습 시작 흐름 ----- */
 
 #studyFlow {
@@ -438,6 +456,71 @@ body.dark #reviewHelp {
 .secondary-button:focus {
   outline: 3px solid #b9b4ef;
   outline-offset: 3px;
+}
+
+/* ----- 중간고사: 내 단어장 목록 ----- */
+
+#myListsEmpty {
+  color: #5e6272;
+}
+
+#myListsEmpty[hidden],
+#myListsContainer[hidden],
+#myListDetail[hidden] {
+  display: none;
+}
+
+#myListsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.my-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid #deddea;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.my-list-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.my-list-info span {
+  color: #5e6272;
+  font-size: 14px;
+}
+
+.my-list-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.my-list-actions .secondary-button {
+  padding: 8px 14px;
+}
+
+#myListDetail {
+  margin-top: 16px;
+}
+
+#myListDetailText {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #f4f3ff;
+  font-weight: 700;
 }
 
 .settings-panel #saveMessage {
@@ -606,6 +689,20 @@ input[type="email"]:focus {
     width: 100%;
     margin-right: 0;
     margin-top: 8px;
+  }
+
+  /* 단어장 목록 항목을 세로로 배치 */
+  .my-list-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .my-list-actions {
+    width: 100%;
+  }
+
+  .my-list-actions .secondary-button {
+    flex: 1;
   }
 
   /* 이메일 입력창과 버튼을 한 열로 배치 */

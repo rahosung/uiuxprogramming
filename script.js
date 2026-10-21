@@ -186,6 +186,11 @@ document.querySelector("#studyBack3").addEventListener("click", function () {
 });
 
 document.querySelector("#studyComplete").addEventListener("click", function () {
+  addMyList({
+    name: studyName.value.trim(),
+    date: studyDate.value,
+    count: studyCount.value
+  });
   showStudyStep(4);
 });
 
@@ -198,4 +203,96 @@ document.querySelector("#studyRestart").addEventListener("click", function () {
   clearStudyError();
   showStudyStep(1);
   studyName.focus();
+});
+
+// ----- 중간고사: 내 단어장 목록 -----
+// 7주차 흐름의 끝(학습 시작하기)에 연결됩니다. 완료할 때마다 목록에
+// 추가되고, 목록에서 다시 열어 보거나 삭제(취소)할 수 있습니다.
+
+const myListsEmpty = document.querySelector("#myListsEmpty");
+const myListsContainer = document.querySelector("#myListsContainer");
+const myListDetail = document.querySelector("#myListDetail");
+const myListDetailText = document.querySelector("#myListDetailText");
+
+let myLists = [];
+let nextListId = 1;
+let openDetailId = null;
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// 목록 상태(비어 있음 / 항목 있음)에 맞게 화면을 다시 그립니다.
+function renderMyLists() {
+  myListsEmpty.hidden = myLists.length > 0;
+  myListsContainer.hidden = myLists.length === 0;
+
+  myListsContainer.innerHTML = myLists.map(function (list) {
+    return `
+      <li class="my-list-item" data-id="${list.id}">
+        <div class="my-list-info">
+          <strong>${escapeHtml(list.name)}</strong>
+          <span>${list.date} 시작 · 하루 ${list.count}개</span>
+        </div>
+        <div class="my-list-actions">
+          <button type="button" class="secondary-button" data-action="open">열기</button>
+          <button type="button" class="secondary-button" data-action="delete">삭제</button>
+        </div>
+      </li>
+    `;
+  }).join("");
+}
+
+function addMyList(entry) {
+  myLists.push({
+    id: nextListId,
+    name: entry.name,
+    date: entry.date,
+    count: entry.count
+  });
+  nextListId += 1;
+  renderMyLists();
+}
+
+// 목록 안의 열기·삭제 버튼은 나중에 생성되므로, 부모 요소에서
+// 이벤트 위임(event delegation)으로 한 번에 처리합니다.
+myListsContainer.addEventListener("click", function (event) {
+  const button = event.target.closest("button[data-action]");
+  if (!button) {
+    return;
+  }
+
+  const item = button.closest(".my-list-item");
+  const id = Number(item.dataset.id);
+  const list = myLists.find(function (entry) {
+    return entry.id === id;
+  });
+
+  if (button.dataset.action === "open") {
+    openDetailId = id;
+    myListDetailText.textContent =
+      `${list.name} · ${list.date} 시작 · 하루 ${list.count}개`;
+    myListDetail.hidden = false;
+    return;
+  }
+
+  if (button.dataset.action === "delete") {
+    myLists = myLists.filter(function (entry) {
+      return entry.id !== id;
+    });
+    renderMyLists();
+
+    // 삭제한 단어장을 상세 화면으로 보고 있었다면 상세 화면도 닫습니다.
+    if (openDetailId === id) {
+      myListDetail.hidden = true;
+      openDetailId = null;
+    }
+  }
+});
+
+document.querySelector("#myListDetailClose").addEventListener("click", function () {
+  myListDetail.hidden = true;
+  openDetailId = null;
 });
