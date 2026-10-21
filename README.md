@@ -1,9 +1,9 @@
+github 주소 : https://github.com/rahosung/uiuxprogramming.git
+퍼블리시 주소 : https://rahosung.github.io/uiuxprogramming/
+
 # 단어장 — 영어 단어 학습 서비스
 
 매일 조금씩, 오래 남는 영어 단어 학습을 돕는 서비스 소개 페이지입니다.
-
-- 배포 주소: https://rahosung.github.io/uiuxprogramming/
-- 저장소: https://github.com/rahosung/uiuxprogramming
 
 ## 사용자와 목적
 
