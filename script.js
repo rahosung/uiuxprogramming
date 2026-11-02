@@ -116,15 +116,26 @@ tabs.forEach(function (tab) {
 const studyFlow = document.querySelector("#studyFlow");
 const studySteps = document.querySelectorAll(".study-step");
 const studyProgress = document.querySelector("#studyProgress");
+const studyForm = document.querySelector("#studyForm");
 const studyName = document.querySelector("#studyName");
+const studyNameField = document.querySelector("#studyNameField");
+const studyNameHelp = document.querySelector("#studyNameHelp");
+const studyNameCount = document.querySelector("#studyNameCount");
 const studyDate = document.querySelector("#studyDate");
 const studyCount = document.querySelector("#studyCount");
 const studyError = document.querySelector("#studyError");
 const reviewHelp = document.querySelector("#reviewHelp");
 const studySummary = document.querySelector("#studySummary");
+const studySubmitStatus = document.querySelector("#studySubmitStatus");
+const studyComplete = document.querySelector("#studyComplete");
 const stepNames = ["단어장 정보", "하루 학습량", "내용 확인"];
 
+let currentStep = 1;
+
+// 단계가 바뀌면 그 단계의 제목으로 초점을 옮겨, 화면 낭독기도 위치를 알 수 있게 합니다.
 function showStudyStep(step) {
+  currentStep = step;
+
   studySteps.forEach(function (item) {
     item.hidden = Number(item.dataset.step) !== step;
   });
@@ -132,12 +143,75 @@ function showStudyStep(step) {
   studyProgress.textContent = step <= 3
     ? `${step} / 3 · ${stepNames[step - 1]}`
     : "학습 시작 완료";
+
+  const heading = document.querySelector(`.study-step[data-step="${step}"] h3`);
+  if (heading) {
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+  }
 }
 
-function clearStudyError() {
-  studyError.textContent = "";
+// ----- 9주차: 단어장 이름 입력 경험 -----
+// 입력 전에는 조건을 안내하고, 입력 중에는 글자 수와 조건 충족 여부를 바로 보여 줍니다.
+function updateStudyNameExperience() {
+  const length = studyName.value.length;
+  const enough = studyName.value.trim().length >= 2;
+  const invalid = studyName.getAttribute("aria-invalid") === "true";
+
+  studyNameCount.textContent = `${length} / 20자`;
+  studyNameField.classList.toggle("is-valid", enough && !invalid);
+
+  if (!invalid) {
+    studyNameHelp.textContent = enough
+      ? "입력 조건을 충족했습니다."
+      : "다른 단어장과 구분되도록 2자 이상 입력해 주세요.";
+  }
+}
+
+function showStudyNameError(message) {
+  studyName.setAttribute("aria-invalid", "true");
+  studyError.textContent = message;
+  studyNameField.classList.remove("is-valid");
+  studyNameField.classList.add("has-error");
+  studyName.classList.add("has-error");
+  return false;
+}
+
+function clearStudyNameError() {
+  studyName.removeAttribute("aria-invalid");
+  studyNameField.classList.remove("has-error");
   studyName.classList.remove("has-error");
+  updateStudyNameExperience();
+}
+
+function validateStudyName() {
+  const name = studyName.value.trim();
+
+  if (!name) {
+    return showStudyNameError("단어장 이름을 입력해 주세요.");
+  }
+
+  if (name.length < 2) {
+    return showStudyNameError("단어장 이름을 2자 이상 입력해 주세요.");
+  }
+
+  clearStudyNameError();
+  return true;
+}
+
+// 오류가 확인된 뒤부터는 고칠 때마다 바로 다시 검사합니다.
+studyName.addEventListener("input", function () {
+  updateStudyNameExperience();
+
+  if (studyName.getAttribute("aria-invalid") === "true") {
+    validateStudyName();
+  }
+});
+
+function clearStudyError() {
+  clearStudyNameError();
   studyDate.classList.remove("has-error");
+  studyError.textContent = "";
 }
 
 // 기존 동의 조건은 그대로 두고, 시작 버튼에서 새 흐름으로 들어갑니다.
@@ -149,21 +223,20 @@ startButton.addEventListener("click", function () {
 
 // 필수값이 비어 있으면 같은 단계에 머물며 고칠 방법을 알려 줍니다.
 document.querySelector("#studyNext1").addEventListener("click", function () {
-  const missingName = !studyName.value.trim();
-  const missingDate = !studyDate.value;
-
-  if (missingName || missingDate) {
-    studyError.textContent = missingName
-      ? "단어장 이름을 입력해 주세요."
-      : "학습 시작일을 선택해 주세요.";
-
-    studyName.classList.toggle("has-error", missingName);
-    studyDate.classList.toggle("has-error", missingDate);
-    (missingName ? studyName : studyDate).focus();
+  if (!validateStudyName()) {
+    studyName.focus();
     return;
   }
 
-  clearStudyError();
+  if (!studyDate.value) {
+    studyError.textContent = "학습 시작일을 선택해 주세요.";
+    studyDate.classList.add("has-error");
+    studyDate.focus();
+    return;
+  }
+
+  studyError.textContent = "";
+  studyDate.classList.remove("has-error");
   showStudyStep(2);
 });
 
@@ -171,13 +244,43 @@ studyCount.addEventListener("change", function () {
   reviewHelp.hidden = Number(studyCount.value) < 10;
 });
 
+// ----- 9주차: 선택에 따라 열리는 조건부 입력(복습 알림 시간대) -----
+const studyReminderOption = document.querySelector("#studyReminderOption");
+const studyReminderOptions = document.querySelector("#studyReminderOptions");
+const studyReminderTimeInputs = [
+  ...document.querySelectorAll('input[name="reminder-time"]')
+];
+
+function syncStudyReminderFields() {
+  const open = studyReminderOption.checked;
+  studyReminderOption.setAttribute("aria-expanded", String(open));
+  studyReminderOptions.hidden = !open;
+  studyReminderTimeInputs.forEach(function (input) {
+    input.disabled = !open;
+  });
+}
+
+function studyReminderTimeLabel() {
+  const checked = studyReminderTimeInputs.find(function (input) {
+    return input.checked;
+  });
+  return checked ? checked.value : "";
+}
+
+studyReminderOption.addEventListener("change", syncStudyReminderFields);
+syncStudyReminderFields();
+
 document.querySelector("#studyBack2").addEventListener("click", function () {
   showStudyStep(1);
 });
 
 document.querySelector("#studyNext2").addEventListener("click", function () {
+  const reminderText = studyReminderOption.checked
+    ? ` · 알림 ${studyReminderTimeLabel()} 받기`
+    : "";
+
   studySummary.textContent =
-    `${studyName.value.trim()} · ${studyDate.value} 시작 · 하루 ${studyCount.value}개`;
+    `${studyName.value.trim()} · ${studyDate.value} 시작 · 하루 ${studyCount.value}개${reminderText}`;
   showStudyStep(3);
 });
 
@@ -185,22 +288,91 @@ document.querySelector("#studyBack3").addEventListener("click", function () {
   showStudyStep(2);
 });
 
-document.querySelector("#studyComplete").addEventListener("click", function () {
-  addMyList({
+// ----- 9주차: 제출 상태(저장 중·완료·실패)와 다시 시도 -----
+// 주소에 ?list-error=1을 붙이면 저장 실패 상황을 테스트할 수 있습니다.
+const forceStudySaveFailure = new URLSearchParams(location.search).has("list-error");
+
+function setStudySubmitState(loading, message) {
+  studyForm.setAttribute("aria-busy", String(loading));
+  studyComplete.disabled = loading;
+  studyComplete.textContent = loading ? "저장하는 중…" : "학습 시작하기";
+  studySubmitStatus.textContent = message;
+}
+
+function wait(milliseconds) {
+  return new Promise(function (resolve) {
+    window.setTimeout(resolve, milliseconds);
+  });
+}
+
+async function persistStudyEntry(entry) {
+  await wait(500);
+
+  if (forceStudySaveFailure) {
+    throw new Error("수업용 저장 실패");
+  }
+
+  addMyList(entry);
+}
+
+// 1·2단계에서 Enter를 눌러도 같은 다음 단계 검사가 실행되도록 submit을 가로챕니다.
+studyForm.addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  if (currentStep === 1) {
+    document.querySelector("#studyNext1").click();
+    return;
+  }
+
+  if (currentStep === 2) {
+    document.querySelector("#studyNext2").click();
+    return;
+  }
+
+  if (currentStep !== 3) {
+    return;
+  }
+
+  if (!validateStudyName()) {
+    showStudyStep(1);
+    window.requestAnimationFrame(function () {
+      studyName.focus();
+    });
+    return;
+  }
+
+  const entry = {
     name: studyName.value.trim(),
     date: studyDate.value,
-    count: studyCount.value
-  });
-  showStudyStep(4);
+    count: studyCount.value,
+    reminder: studyReminderOption.checked ? studyReminderTimeLabel() : ""
+  };
+
+  setStudySubmitState(true, "단어장을 저장하고 있습니다.");
+
+  try {
+    await persistStudyEntry(entry);
+    setStudySubmitState(false, "단어장을 저장했습니다.");
+    document.querySelector("#completeMessage").textContent =
+      `'${entry.name}' 단어장이 만들어졌습니다. 내 단어장 목록에서 다시 열어볼 수 있습니다.`;
+    showStudyStep(4);
+  } catch {
+    setStudySubmitState(
+      false,
+      "저장하지 못했습니다. 입력한 내용은 그대로 두었습니다. 다시 시도해 주세요."
+    );
+  }
 });
 
 document.querySelector("#studyRestart").addEventListener("click", function () {
-  studyName.value = "";
-  studyDate.value = "";
-  studyCount.value = "5";
+  studyForm.reset();
+  syncStudyReminderFields();
+
   reviewHelp.hidden = true;
   studySummary.textContent = "";
   clearStudyError();
+  setStudySubmitState(false, "");
+
   showStudyStep(1);
   studyName.focus();
 });
@@ -230,11 +402,13 @@ function renderMyLists() {
   myListsContainer.hidden = myLists.length === 0;
 
   myListsContainer.innerHTML = myLists.map(function (list) {
+    const reminderText = list.reminder ? ` · 알림 ${list.reminder} 받기` : "";
+
     return `
       <li class="my-list-item" data-id="${list.id}">
         <div class="my-list-info">
           <strong>${escapeHtml(list.name)}</strong>
-          <span>${list.date} 시작 · 하루 ${list.count}개</span>
+          <span>${list.date} 시작 · 하루 ${list.count}개${escapeHtml(reminderText)}</span>
         </div>
         <div class="my-list-actions">
           <button type="button" class="secondary-button" data-action="open">열기</button>
@@ -250,7 +424,8 @@ function addMyList(entry) {
     id: nextListId,
     name: entry.name,
     date: entry.date,
-    count: entry.count
+    count: entry.count,
+    reminder: entry.reminder || ""
   });
   nextListId += 1;
   renderMyLists();
@@ -271,9 +446,11 @@ myListsContainer.addEventListener("click", function (event) {
   });
 
   if (button.dataset.action === "open") {
+    const reminderText = list.reminder ? ` · 알림 ${list.reminder} 받기` : "";
+
     openDetailId = id;
     myListDetailText.textContent =
-      `${list.name} · ${list.date} 시작 · 하루 ${list.count}개`;
+      `${list.name} · ${list.date} 시작 · 하루 ${list.count}개${reminderText}`;
     myListDetail.hidden = false;
     return;
   }

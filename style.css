@@ -355,6 +355,31 @@ body.dark #myListDetailText {
   background-color: #3a3b47;
 }
 
+body.dark .study-field.is-valid input {
+  border-color: #3fae82;
+}
+
+body.dark .study-field.is-valid #studyNameHelp {
+  color: #7fd9b4;
+}
+
+body.dark .field-meta p,
+body.dark #studySubmitStatus {
+  color: #c7c8d6;
+}
+
+body.dark .reminder-field {
+  border-top-color: #50515f;
+}
+
+body.dark .study-step .reminder-options {
+  border-color: #50515f;
+}
+
+body.dark .study-step .check-row small {
+  color: #c7c8d6;
+}
+
 /* ----- 7주차: 단어 학습 시작 흐름 ----- */
 
 #studyFlow {
@@ -387,7 +412,8 @@ body.dark #myListDetailText {
   font-weight: 700;
 }
 
-.study-step input,
+.study-step input[type="text"],
+.study-step input[type="date"],
 .study-step select {
   width: 100%;
   max-width: 100%;
@@ -397,7 +423,8 @@ body.dark #myListDetailText {
   font: inherit;
 }
 
-.study-step input:focus,
+.study-step input[type="text"]:focus,
+.study-step input[type="date"]:focus,
 .study-step select:focus {
   border-color: #5b50c8;
   outline: 3px solid #d9d6ff;
@@ -456,6 +483,129 @@ body.dark #myListDetailText {
 .secondary-button:focus {
   outline: 3px solid #b9b4ef;
   outline-offset: 3px;
+}
+
+/* ----- 9주차: 폼 UI와 입력 경험 ----- */
+
+.required {
+  color: #9d2439;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.study-field {
+  margin-top: 16px;
+}
+
+.study-field label {
+  margin-top: 0;
+}
+
+.field-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.field-meta p {
+  margin: 0;
+  color: #5e6272;
+  font-size: 13px;
+}
+
+#studyNameCount {
+  flex: none;
+}
+
+.study-field.is-valid input {
+  border-color: #16805d;
+}
+
+.study-field.is-valid #studyNameHelp {
+  color: #116448;
+}
+
+.study-field.has-error input {
+  border-color: #9d2439;
+}
+
+#studySubmitStatus {
+  min-height: 22px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  color: #5e6272;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reminder-field {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e1ec;
+}
+
+.study-step .check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.study-step .check-row input {
+  flex: 0 0 auto;
+  width: auto;
+  margin-top: 4px;
+}
+
+.study-step .check-row strong {
+  display: block;
+  font-weight: 700;
+}
+
+.study-step .check-row small {
+  display: block;
+  color: #5e6272;
+  font-weight: 400;
+}
+
+.study-step .reminder-options {
+  margin: 12px 0 0;
+  padding: 12px 16px;
+  border: 1px solid #deddea;
+  border-radius: 10px;
+}
+
+.study-step .reminder-options legend {
+  padding: 0;
+  font-weight: 700;
+}
+
+.study-step .reminder-options[hidden] {
+  display: none;
+}
+
+.study-step .inline-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.study-step .inline-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-weight: 400;
+}
+
+.study-step .inline-options input {
+  width: auto;
+  margin-top: 0;
 }
 
 /* ----- 중간고사: 내 단어장 목록 ----- */
@@ -689,6 +839,17 @@ input[type="email"]:focus {
     width: 100%;
     margin-right: 0;
     margin-top: 8px;
+  }
+
+  /* 글자 수 안내를 세로로 배치 */
+  .field-meta {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .study-step .inline-options {
+    flex-direction: column;
+    gap: 8px;
   }
 
   /* 단어장 목록 항목을 세로로 배치 */

@@ -133,50 +133,94 @@
       <h2>단어 학습 시작</h2>
       <p id="studyProgress" aria-live="polite">1 / 3 · 단어장 정보</p>
 
-      <section class="study-step" data-step="1">
-        <h3>단어장 정보</h3>
+      <form id="studyForm" novalidate aria-busy="false">
+        <section class="study-step" data-step="1">
+          <h3>단어장 정보</h3>
 
-        <label for="studyName">단어장 이름</label>
-        <input id="studyName" type="text" aria-describedby="studyError">
+          <div class="study-field" id="studyNameField">
+            <label for="studyName">단어장 이름 <span class="required">필수</span></label>
+            <input
+              id="studyName"
+              name="studyName"
+              type="text"
+              minlength="2"
+              maxlength="20"
+              required
+              placeholder="예: 토익 필수 단어"
+              aria-describedby="studyNameHelp studyNameCount studyError"
+            >
+            <div class="field-meta">
+              <p id="studyNameHelp">다른 단어장과 구분되도록 2자 이상 입력해 주세요.</p>
+              <p id="studyNameCount" aria-live="polite">0 / 20자</p>
+            </div>
+          </div>
 
-        <label for="studyDate">학습 시작일</label>
-        <input id="studyDate" type="date" aria-describedby="studyError">
+          <label for="studyDate">학습 시작일</label>
+          <input id="studyDate" name="studyDate" type="date" aria-describedby="studyError">
 
-        <p id="studyError" role="alert"></p>
+          <p id="studyError" role="alert"></p>
 
-        <button id="studyNext1" class="primary-button" type="button">학습량 선택하기</button>
-      </section>
+          <button id="studyNext1" class="primary-button" type="button">학습량 선택하기</button>
+        </section>
 
-      <section class="study-step" data-step="2" hidden>
-        <h3>하루 학습량</h3>
+        <section class="study-step" data-step="2" hidden>
+          <h3>하루 학습량</h3>
 
-        <label for="studyCount">하루에 외울 단어 수</label>
-        <select id="studyCount">
-          <option value="5">5개</option>
-          <option value="10">10개</option>
-          <option value="20">20개</option>
-        </select>
+          <label for="studyCount">하루에 외울 단어 수</label>
+          <select id="studyCount" name="studyCount">
+            <option value="5">5개</option>
+            <option value="10">10개</option>
+            <option value="20">20개</option>
+          </select>
 
-        <p id="reviewHelp" hidden>
-          하루 10개 이상이면 복습할 단어도 함께 늘어납니다. 알림 설정을 켜 두세요.
-        </p>
+          <p id="reviewHelp" hidden>
+            하루 10개 이상이면 복습할 단어도 함께 늘어납니다. 알림 설정을 켜 두세요.
+          </p>
 
-        <button id="studyBack2" class="secondary-button" type="button">정보 수정하기</button>
-        <button id="studyNext2" class="primary-button" type="button">학습 내용 확인하기</button>
-      </section>
+          <div class="reminder-field">
+            <label class="check-row" for="studyReminderOption">
+              <input
+                id="studyReminderOption"
+                name="reminder"
+                type="checkbox"
+                value="included"
+                aria-controls="studyReminderOptions"
+                aria-expanded="false"
+              >
+              <span>
+                <strong>복습 알림도 함께 받을게요</strong>
+                <small>알림 받을 시간대를 정할 수 있습니다.</small>
+              </span>
+            </label>
 
-      <section class="study-step" data-step="3" hidden>
-        <h3>학습 내용 확인</h3>
+            <fieldset id="studyReminderOptions" class="reminder-options" hidden>
+              <legend>알림 받을 시간대</legend>
+              <div class="inline-options">
+                <label><input type="radio" name="reminder-time" value="아침" disabled> 아침</label>
+                <label><input type="radio" name="reminder-time" value="오후" checked disabled> 오후</label>
+                <label><input type="radio" name="reminder-time" value="저녁" disabled> 저녁</label>
+              </div>
+            </fieldset>
+          </div>
 
-        <p id="studySummary"></p>
+          <button id="studyBack2" class="secondary-button" type="button">정보 수정하기</button>
+          <button id="studyNext2" class="primary-button" type="button">학습 내용 확인하기</button>
+        </section>
 
-        <button id="studyBack3" class="secondary-button" type="button">학습량 수정하기</button>
-        <button id="studyComplete" class="primary-button" type="button">학습 시작하기</button>
-      </section>
+        <section class="study-step" data-step="3" hidden>
+          <h3>학습 내용 확인</h3>
+
+          <p id="studySummary"></p>
+          <p id="studySubmitStatus" role="status" aria-live="polite"></p>
+
+          <button id="studyBack3" class="secondary-button" type="button">학습량 수정하기</button>
+          <button id="studyComplete" class="primary-button" type="submit">학습 시작하기</button>
+        </section>
+      </form>
 
       <section class="study-step" data-step="4" hidden>
         <h3>학습을 시작했습니다</h3>
-        <p>오늘의 단어장이 만들어졌습니다. 알림 시간에 맞춰 복습해 보세요.</p>
+        <p id="completeMessage">오늘의 단어장이 만들어졌습니다. 알림 시간에 맞춰 복습해 보세요.</p>
 
         <button id="studyRestart" class="secondary-button" type="button">다시 만들기</button>
       </section>
