@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#top">본문 바로가기</a>
+
   <!-- UX 계획
     사용자: 영어 단어를 꾸준히 외우고 싶은 학습자
     목적: 나만의 단어장을 만들어 오늘의 학습을 시작한다.
@@ -40,7 +42,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="top" tabindex="-1">
     <section id="features" class="content-section">
       <h2>서비스 정보</h2>
 
@@ -117,7 +119,7 @@
           maxlength="10"
           placeholder="10자 이내로 입력"
         >
-        <p id="userNameCount" aria-live="polite">0 / 10</p>
+        <p id="userNameCount">0 / 10</p>
       </div>
 
       <div class="interaction-item">
@@ -158,7 +160,7 @@
             >
             <div class="field-meta">
               <p id="studyNameHelp">다른 단어장과 구분되도록 2자 이상 입력해 주세요.</p>
-              <p id="studyNameCount" aria-live="polite">0 / 20자</p>
+              <p id="studyNameCount">0 / 20자</p>
             </div>
           </div>
 
@@ -242,14 +244,20 @@
         <button class="my-list-filter" type="button" data-filter="none" aria-pressed="false">알림 없음</button>
       </div>
 
-      <p id="myListsEmpty">아직 만든 단어장이 없습니다. 학습을 시작하면 여기에 추가됩니다.</p>
+      <p id="myListStatus" role="status" aria-live="polite" class="visually-hidden"></p>
+
+      <div id="myListsEmpty" class="my-list-empty">
+        <p id="myListsEmptyText">아직 만든 단어장이 없습니다. 학습을 시작하면 여기에 추가됩니다.</p>
+        <a id="myListsEmptyAction" class="secondary-button" href="#interaction-practice">학습 시작하러 가기</a>
+      </div>
 
       <ul id="myListsContainer" class="my-list" hidden></ul>
 
       <div id="myListDetail" class="panel" hidden>
         <h3>단어장 상세</h3>
         <p id="myListDetailText"></p>
-        <button id="myListDetailClose" class="secondary-button" type="button">닫기</button>
+        <button id="myListDetailClose" class="secondary-button" type="button"
+          aria-label="단어장 상세 닫기">닫기</button>
       </div>
     </section>
 

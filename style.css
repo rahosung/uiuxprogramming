@@ -15,6 +15,37 @@ a {
   text-decoration: none;
 }
 
+/* ----- 11주차: 본문 바로가기, 화면에만 숨기는 안내 ----- */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  padding: 10px 14px;
+  border: 2px solid #5b50c8;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #292a31;
+  font-weight: 700;
+  transform: translateY(-160%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 .site-header,
 main,
 .site-footer {
@@ -739,6 +770,20 @@ body.dark .my-list-filter.is-active {
   color: #ffffff;
   background-color: #5b50c8;
   border-color: #5b50c8;
+}
+
+/* ----- 11주차: 색이 아니어도 선택 상태를 알 수 있도록 굵기·밑줄 추가 ----- */
+.site-nav a[aria-current="page"],
+.my-list-filter[aria-pressed="true"] {
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+/* ----- 11주차: 결과 없음 안내와 다음 행동 ----- */
+.my-list-empty #myListsEmptyAction {
+  display: inline-block;
+  margin-top: 12px;
 }
 
 .settings-panel #saveMessage {

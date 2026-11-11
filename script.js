@@ -382,6 +382,9 @@ document.querySelector("#studyRestart").addEventListener("click", function () {
 // 추가되고, 목록에서 다시 열어 보거나 삭제(취소)할 수 있습니다.
 
 const myListsEmpty = document.querySelector("#myListsEmpty");
+const myListsEmptyText = document.querySelector("#myListsEmptyText");
+const myListsEmptyAction = document.querySelector("#myListsEmptyAction");
+const myListStatus = document.querySelector("#myListStatus");
 const myListsContainer = document.querySelector("#myListsContainer");
 const myListDetail = document.querySelector("#myListDetail");
 const myListDetailText = document.querySelector("#myListDetailText");
@@ -411,14 +414,17 @@ function escapeHtml(text) {
 // 목록 상태(비어 있음 / 항목 있음 / 필터 결과 없음)에 맞게 화면을 다시 그립니다.
 function renderMyLists() {
   const visibleLists = getVisibleMyLists();
+  const trulyEmpty = myLists.length === 0;
 
   myListsEmpty.hidden = visibleLists.length !== 0;
   myListsContainer.hidden = visibleLists.length === 0;
 
   if (visibleLists.length === 0) {
-    myListsEmpty.textContent = currentListFilter !== "all"
-      ? "선택한 조건에 맞는 단어장이 없습니다. 다른 조건을 선택해 보세요."
-      : "아직 만든 단어장이 없습니다. 학습을 시작하면 여기에 추가됩니다.";
+    myListsEmptyText.textContent = trulyEmpty
+      ? "아직 만든 단어장이 없습니다. 학습을 시작하면 여기에 추가됩니다."
+      : "선택한 조건에 맞는 단어장이 없습니다. 다른 조건을 선택해 보세요.";
+    myListsEmptyAction.textContent = trulyEmpty ? "학습 시작하러 가기" : "전체 보기";
+    myListsEmptyAction.href = trulyEmpty ? "#interaction-practice" : "#myLists";
   }
 
   myListsContainer.innerHTML = visibleLists.map(function (list) {
@@ -476,6 +482,11 @@ myListsContainer.addEventListener("click", function (event) {
   }
 
   if (button.dataset.action === "delete") {
+    const itemsBeforeDelete = [...myListsContainer.querySelectorAll(".my-list-item")];
+    const deletedIndex = itemsBeforeDelete.findIndex(function (el) {
+      return Number(el.dataset.id) === id;
+    });
+
     myLists = myLists.filter(function (entry) {
       return entry.id !== id;
     });
@@ -486,6 +497,13 @@ myListsContainer.addEventListener("click", function (event) {
       myListDetail.hidden = true;
       openDetailId = null;
     }
+
+    // 삭제 후에도 초점을 잃지 않도록, 같은 자리의 다음 항목이나 선택된 필터로 옮겨 줍니다.
+    const itemsAfterDelete = [...myListsContainer.querySelectorAll(".my-list-item")];
+    const nextItem = itemsAfterDelete[deletedIndex] || itemsAfterDelete[deletedIndex - 1];
+    const nextButton = nextItem ? nextItem.querySelector('button[data-action="delete"]') : null;
+    const selectedFilter = document.querySelector('.my-list-filter[aria-pressed="true"]');
+    (nextButton || selectedFilter)?.focus();
   }
 });
 
@@ -505,7 +523,25 @@ myListFilterButtons.forEach(function (button) {
     });
 
     renderMyLists();
+
+    const count = getVisibleMyLists().length;
+    const filterName = button.textContent.trim();
+    myListStatus.textContent = count > 0
+      ? `${filterName} 단어장 ${count}개가 표시됩니다.`
+      : `${filterName} 단어장이 없습니다. 다른 조건을 선택해 보세요.`;
   });
+});
+
+// ----- 11주차: 결과가 없을 때 전체 보기로 돌아가기 -----
+myListsEmptyAction.addEventListener("click", function (event) {
+  if (myLists.length === 0) {
+    return;
+  }
+
+  event.preventDefault();
+  const allButton = document.querySelector('.my-list-filter[data-filter="all"]');
+  allButton.click();
+  allButton.focus();
 });
 
 // ----- 10주차: 메뉴와 현재 위치 -----
@@ -528,6 +564,10 @@ function updateCurrentNav() {
       link.removeAttribute("aria-current");
     }
   });
+
+  const currentLink = document.querySelector('#mainNav a[aria-current="page"]');
+  const pageName = currentLink ? currentLink.textContent.trim() : "서비스 정보";
+  document.title = `${pageName} | 단어장`;
 }
 
 window.addEventListener("hashchange", updateCurrentNav);
@@ -543,6 +583,18 @@ menuToggle.addEventListener("click", function () {
 
   menuToggle.textContent = isOpen ? "메뉴 닫기" : "메뉴 열기";
   menuToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+// ----- 11주차: 열린 모바일 메뉴를 Esc로 닫고 메뉴 버튼으로 초점 복귀 -----
+document.addEventListener("keydown", function (event) {
+  if (event.key !== "Escape" || !mainNav.classList.contains("is-open")) {
+    return;
+  }
+
+  mainNav.classList.remove("is-open");
+  menuToggle.textContent = "메뉴 열기";
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.focus();
 });
 
 // 목적지를 선택하면 모바일 메뉴를 닫습니다.
