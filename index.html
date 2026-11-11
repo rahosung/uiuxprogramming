@@ -24,12 +24,19 @@
     <h1>단어장</h1>
     <p class="header-description">매일 조금씩, 오래 남는 영어 단어 학습.</p>
 
-    <nav class="site-nav" aria-label="주요 메뉴">
-      <a href="#features">서비스 정보</a>
-      <a href="#interaction-practice">학습 설정</a>
-      <a href="#myLists">내 단어장</a>
-      <a href="#notify">알림 설정</a>
-      <a href="#subscribe">소식 받기</a>
+    <button id="menuToggle" class="secondary-button menu-toggle" type="button"
+      aria-controls="mainNav" aria-expanded="false">
+      메뉴 열기
+    </button>
+
+    <nav class="site-nav" id="mainNav" aria-label="주요 메뉴">
+      <ul>
+        <li><a href="#features">서비스 정보</a></li>
+        <li><a href="#interaction-practice">학습 설정</a></li>
+        <li><a href="#myLists">내 단어장</a></li>
+        <li><a href="#notify">알림 설정</a></li>
+        <li><a href="#subscribe">소식 받기</a></li>
+      </ul>
     </nav>
   </header>
 
@@ -228,6 +235,12 @@
 
     <section id="myLists" class="content-section">
       <h2>내 단어장 목록</h2>
+
+      <div class="my-list-filters" role="group" aria-label="내 단어장 표시 범위">
+        <button class="my-list-filter is-active" type="button" data-filter="all" aria-pressed="true">전체</button>
+        <button class="my-list-filter" type="button" data-filter="reminder" aria-pressed="false">알림 설정됨</button>
+        <button class="my-list-filter" type="button" data-filter="none" aria-pressed="false">알림 없음</button>
+      </div>
 
       <p id="myListsEmpty">아직 만든 단어장이 없습니다. 학습을 시작하면 여기에 추가됩니다.</p>
 

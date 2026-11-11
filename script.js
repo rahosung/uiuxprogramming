@@ -390,18 +390,38 @@ let myLists = [];
 let nextListId = 1;
 let openDetailId = null;
 
+// ----- 10주차: 알림 설정 여부로 목록 범위 좁히기 -----
+const myListFilterButtons = document.querySelectorAll(".my-list-filter");
+let currentListFilter = "all";
+
+function getVisibleMyLists() {
+  return myLists.filter(function (list) {
+    if (currentListFilter === "reminder") return !!list.reminder;
+    if (currentListFilter === "none") return !list.reminder;
+    return true;
+  });
+}
+
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
 
-// 목록 상태(비어 있음 / 항목 있음)에 맞게 화면을 다시 그립니다.
+// 목록 상태(비어 있음 / 항목 있음 / 필터 결과 없음)에 맞게 화면을 다시 그립니다.
 function renderMyLists() {
-  myListsEmpty.hidden = myLists.length > 0;
-  myListsContainer.hidden = myLists.length === 0;
+  const visibleLists = getVisibleMyLists();
 
-  myListsContainer.innerHTML = myLists.map(function (list) {
+  myListsEmpty.hidden = visibleLists.length !== 0;
+  myListsContainer.hidden = visibleLists.length === 0;
+
+  if (visibleLists.length === 0) {
+    myListsEmpty.textContent = currentListFilter !== "all"
+      ? "선택한 조건에 맞는 단어장이 없습니다. 다른 조건을 선택해 보세요."
+      : "아직 만든 단어장이 없습니다. 학습을 시작하면 여기에 추가됩니다.";
+  }
+
+  myListsContainer.innerHTML = visibleLists.map(function (list) {
     const reminderText = list.reminder ? ` · 알림 ${list.reminder} 받기` : "";
 
     return `
@@ -472,4 +492,64 @@ myListsContainer.addEventListener("click", function (event) {
 document.querySelector("#myListDetailClose").addEventListener("click", function () {
   myListDetail.hidden = true;
   openDetailId = null;
+});
+
+myListFilterButtons.forEach(function (button) {
+  button.addEventListener("click", function () {
+    currentListFilter = button.dataset.filter;
+
+    myListFilterButtons.forEach(function (item) {
+      const selected = item === button;
+      item.classList.toggle("is-active", selected);
+      item.setAttribute("aria-pressed", String(selected));
+    });
+
+    renderMyLists();
+  });
+});
+
+// ----- 10주차: 메뉴와 현재 위치 -----
+
+const navLinks = document.querySelectorAll("#mainNav a");
+
+function updateCurrentNav() {
+  const currentHash = window.location.hash;
+
+  navLinks.forEach(function (link) {
+    const current = currentHash
+      ? link.getAttribute("href") === currentHash
+      : link === navLinks[0];
+
+    link.classList.toggle("is-current", current);
+
+    if (current) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+}
+
+window.addEventListener("hashchange", updateCurrentNav);
+updateCurrentNav();
+
+// ----- 10주차: 모바일 메뉴 열고 닫기 -----
+
+const menuToggle = document.querySelector("#menuToggle");
+const mainNav = document.querySelector("#mainNav");
+
+menuToggle.addEventListener("click", function () {
+  const isOpen = mainNav.classList.toggle("is-open");
+
+  menuToggle.textContent = isOpen ? "메뉴 닫기" : "메뉴 열기";
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+// 목적지를 선택하면 모바일 메뉴를 닫습니다.
+navLinks.forEach(function (link) {
+  link.addEventListener("click", function () {
+    mainNav.classList.remove("is-open");
+    menuToggle.textContent = "메뉴 열기";
+    menuToggle.setAttribute("aria-expanded", "false");
+  });
 });
